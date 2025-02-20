@@ -48,7 +48,7 @@ export async function generateImages() {
 
   const paperContentEl = document.querySelector('.page-a .paper-content');
   const scrollHeight = paperContentEl.scrollHeight;
-  const clientHeight = 514; // height of .paper-content when there is no content
+  const clientHeight = paperContentEl.clientHeight; // Use actual client height instead of fixed value
 
   const totalPages = Math.ceil(scrollHeight / clientHeight);
 
@@ -56,7 +56,7 @@ export async function generateImages() {
     // For multiple pages
     if (paperContentEl.innerHTML.includes('<img')) {
       alert(
-        "You're trying to generate more than one page, Images and some formatting may not work correctly with multiple images" // eslint-disable-line max-len
+        "You're trying to generate more than one page, Images and some formatting may not work correctly with multiple images"
       );
     }
     const initialPaperContent = paperContentEl.innerHTML;
@@ -67,23 +67,35 @@ export async function generateImages() {
     for (let i = 0; i < totalPages; i++) {
       paperContentEl.innerHTML = '';
       const wordArray = [];
-      let wordString = '';
+      let lastValidContent = '';
 
-      while (
-        paperContentEl.scrollHeight <= clientHeight &&
-        wordCount <= splitContent.length
-      ) {
-        wordString = wordArray.join(' ');
+      // Fill up the page as much as possible
+      while (wordCount < splitContent.length) {
         wordArray.push(splitContent[wordCount]);
-        paperContentEl.innerHTML = wordArray.join(' ');
+        const currentContent = wordArray.join('');
+        paperContentEl.innerHTML = currentContent;
+        
+        // If we exceed the page height, revert to last valid content and move to next page
+        if (paperContentEl.scrollHeight > clientHeight) {
+          paperContentEl.innerHTML = lastValidContent;
+          break;
+        }
+        
+        lastValidContent = currentContent;
         wordCount++;
       }
-      paperContentEl.innerHTML = wordString;
-      wordCount--;
+
       pageEl.scrollTo(0, 0);
       await convertDIVToImage();
-      paperContentEl.innerHTML = initialPaperContent;
+      
+      // If we've processed all words, break
+      if (wordCount >= splitContent.length) {
+        break;
+      }
     }
+    
+    // Restore the original content
+    paperContentEl.innerHTML = initialPaperContent;
   } else {
     // single image
     await convertDIVToImage();
