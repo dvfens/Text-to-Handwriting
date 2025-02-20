@@ -18,6 +18,7 @@ body {
   --primary-button-color: #eee;
   --font-color-delete: #dc3545;
   --delete-button-borders: #dc3545;
+  --margin-border-color: pink;
 
   width: 100%;
   overflow-x: hidden;
@@ -221,6 +222,8 @@ body.dark .github-corner {
 .paper-content {
   margin: 10px;
   width: 100%;
+  position: relative;
+  z-index: 1;
 }
 .page-a.lines .paper-content {
   background-image: linear-gradient(#999 0.05em, transparent 0.1em);
@@ -229,34 +232,56 @@ body.dark .github-corner {
 }
 
 .margined .paper-content {
-  padding: 5px;
+  padding: var(--margin-top, 20px) var(--margin-right, 15px) var(--margin-bottom, 20px) var(--margin-left, 30px);
   margin: 0px;
-  padding-left: 55px;
+  position: relative;
+  box-sizing: border-box;
 }
 
 .left-margin,
-.top-margin {
+.top-margin,
+.right-margin,
+.bottom-margin {
   display: none;
+  position: absolute;
+  background: transparent;
+  border: 2px solid var(--margin-border-color);
 }
 
 .margined .top-margin {
-  height: 50px;
-  border-bottom: 2px solid pink;
+  height: var(--margin-top, 20px);
   width: 100%;
   display: block;
-  overflow-y: auto;
+  top: 0;
+  left: 0;
+  border-width: 0 0 2px 0;
+}
+
+.margined .right-margin {
+  width: var(--margin-right, 15px);
+  height: 100%;
+  display: block;
+  top: 0;
+  right: 0;
+  border-width: 0 0 0 2px;
+}
+
+.margined .bottom-margin {
+  width: 100%;
+  height: var(--margin-bottom, 20px);
+  display: block;
+  bottom: 0;
+  left: 0;
+  border-width: 2px 0 0 0;
 }
 
 .margined .left-margin {
-  width: 50px;
-  height: calc(100%);
-  display: inline-block;
-  border-right: 2px solid pink;
-  top: 0px;
-  padding-top: 50px;
-  overflow-x: hidden;
-  position: absolute;
+  width: var(--margin-left, 30px);
+  height: 100%;
+  display: block;
+  top: 0;
   left: 0;
+  border-width: 0 2px 0 0;
 }
 
 .overlay {
@@ -468,4 +493,123 @@ input[type='file']::before {
   .delete-button {
     margin-top: 10px;
   }
+}
+
+/* Handwriting Creator Popup Styles */
+.popup-container {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-container.show {
+  display: flex;
+}
+
+.popup-content {
+  background: var(--background-primary);
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.popup-container .close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--font-color-primary);
+  padding: 5px 10px;
+}
+
+.characters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.character-preview {
+  border: 1px solid var(--field-borders);
+  padding: 5px;
+  text-align: center;
+}
+
+/* Context Menu Styles */
+.context-menu {
+  display: none;
+  position: fixed;
+  background: var(--background-primary);
+  border: 1px solid var(--field-borders);
+  border-radius: 4px;
+  padding: 5px 0;
+  min-width: 150px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+
+.context-menu.show {
+  display: block;
+}
+
+.menu-item {
+  padding: 8px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--font-color-primary);
+}
+
+.menu-item:hover {
+  background: var(--elevation-background);
+}
+
+.menu-separator {
+  height: 1px;
+  background: var(--field-borders);
+  margin: 5px 0;
+}
+
+/* Custom text styles */
+.paper-content .custom-text.bold {
+  font-weight: 900;
+}
+
+.paper-content .custom-text.italic {
+  font-style: italic;
+}
+
+.paper-content .custom-text.underline {
+  text-decoration: underline;
+}
+
+.paper-content .custom-text.larger {
+  font-size: 1.2em;
+}
+
+.paper-content .custom-text.smaller {
+  font-size: 0.8em;
+}
+
+::selection {
+  background: rgba(0, 123, 255, 0.2);
+}
+
+/* Ensure proper positioning context */
+.paper-content {
+  position: relative !important;
+  z-index: 1;
 }

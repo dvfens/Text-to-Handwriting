@@ -147,6 +147,36 @@ const EVENT_MAP = {
   '#paper-file': {
     on: 'change',
     action: (e) => addPaperFromFile(e.target.files[0])
+  },
+  '#margin-top': {
+    on: 'change',
+    action: (e) => {
+      document.body.style.setProperty('--margin-top', e.target.value + 'px');
+    }
+  },
+  '#margin-right': {
+    on: 'change',
+    action: (e) => {
+      document.body.style.setProperty('--margin-right', e.target.value + 'px');
+    }
+  },
+  '#margin-bottom': {
+    on: 'change',
+    action: (e) => {
+      document.body.style.setProperty('--margin-bottom', e.target.value + 'px');
+    }
+  },
+  '#margin-left': {
+    on: 'change',
+    action: (e) => {
+      document.body.style.setProperty('--margin-left', e.target.value + 'px');
+    }
+  },
+  '#margin-color': {
+    on: 'input',
+    action: (e) => {
+      document.body.style.setProperty('--margin-border-color', e.target.value);
+    }
   }
 };
 
@@ -205,3 +235,4 @@ fetch(
       )
       .join('');
   });
+
