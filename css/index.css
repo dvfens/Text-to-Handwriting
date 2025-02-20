@@ -218,6 +218,9 @@ body.dark .github-corner {
   overflow-y: auto;
   scrollbar-color: transparent;
   scrollbar-width: thin;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 .paper-content {
   margin: 10px;

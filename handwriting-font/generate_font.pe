@@ -1,0 +1,14 @@
+# Create a new font
+New()
+
+# Set font properties
+SetFontNames("MyHandwriting", "MyHandwriting", "MyHandwriting", "Regular", "Created from handwriting sample", "1.0")
+
+# Import glyphs
+foreach
+ Open($1)
+ Import($1, 0)
+endloop
+
+# Generate TTF
+Generate("MyHandwriting.ttf") 
