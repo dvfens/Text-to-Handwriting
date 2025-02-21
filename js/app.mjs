@@ -1,7 +1,8 @@
 import {
   addFontFromFile,
   formatText,
-  addPaperFromFile
+  addPaperFromFile,
+  addImageToPaperContent
 } from './utils/helpers.mjs';
 import {
   generateImages,
@@ -176,6 +177,20 @@ const EVENT_MAP = {
     on: 'input',
     action: (e) => {
       document.body.style.setProperty('--margin-border-color', e.target.value);
+    }
+  },
+  '#upload-image-button': {
+    on: 'click',
+    action: () => {
+      document.querySelector('#direct-image-input').click();
+    }
+  },
+  '#direct-image-input': {
+    on: 'change',
+    action: (e) => {
+      if (e.target.files && e.target.files[0]) {
+        addImageToPaperContent(e.target.files[0]);
+      }
     }
   }
 };

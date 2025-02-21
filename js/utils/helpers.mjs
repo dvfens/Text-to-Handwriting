@@ -143,4 +143,62 @@ export function initializeTextCustomization() {
   });
 }
 
-export { isMobile, addFontFromFile, createPDF, formatText, addPaperFromFile };
+function addImageToPaperContent(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = document.createElement('img');
+    img.src = e.target.result;
+    
+    // Create a container div that will hold the image
+    const imageContainer = document.createElement('div');
+    imageContainer.className = 'paper-image-container';
+    
+    // Create a white background div to block lines
+    const whiteBg = document.createElement('div');
+    whiteBg.className = 'image-background';
+    imageContainer.appendChild(whiteBg);
+    
+    // Add the image to the container
+    imageContainer.appendChild(img);
+    
+    // Get the paper content element
+    const paperContent = document.querySelector('.page-a .paper-content');
+    
+    // Calculate optimal image size based on page width
+    img.onload = () => {
+      const pageWidth = paperContent.clientWidth;
+      const aspectRatio = img.naturalWidth / img.naturalHeight;
+      
+      // Set maximum width to 70% of page width
+      const maxWidth = Math.min(pageWidth * 0.7, img.naturalWidth);
+      img.style.width = maxWidth + 'px';
+      img.style.height = (maxWidth / aspectRatio) + 'px';
+      
+      // Size the white background
+      whiteBg.style.width = (maxWidth + 40) + 'px'; // Add padding
+      whiteBg.style.height = (maxWidth / aspectRatio + 40) + 'px'; // Add padding
+    };
+    
+    // Create a paragraph to contain the image (this helps with line spacing)
+    const paragraph = document.createElement('p');
+    paragraph.className = 'image-paragraph';
+    paragraph.appendChild(imageContainer);
+    
+    // Insert at cursor position or append to end
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      if (paperContent.contains(range.commonAncestorContainer)) {
+        range.deleteContents();
+        range.insertNode(paragraph);
+      } else {
+        paperContent.appendChild(paragraph);
+      }
+    } else {
+      paperContent.appendChild(paragraph);
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+export { isMobile, addFontFromFile, createPDF, formatText, addPaperFromFile, addImageToPaperContent };
